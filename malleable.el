@@ -2,10 +2,12 @@
 (require 'cl-lib)
 (require 'url)
 (require 's)
+(require 'pcsv)
+(require 'moldable-emacs)
 
 (defun malleable-malleus-open-link (link _)
-  ;;; TODO
-  ;;; ASk confirmation from user they want to execute, like org-babel
+;;; TODO
+;;; ASk confirmation from user they want to execute, like org-babel
   (string-match "\\([^?]+\\)\\?\\(.*\\)$" link)
   (let ((cmd (match-string 1 link))
         (qs (url-parse-query-string (match-string 2 link))))
@@ -53,7 +55,14 @@
 (defmalleus test-it (one two)
   (message (format "[%s]: %s" one two)))
 
-;; (apply (intern "test-it") (list "one" "two"))
-;; (apply 'test-it '("one" "two"))
+(defmalleus csv-to-plist ()
+  (save-excursion
+    (goto-char (point-min))
+    (let* ((plist (--> (pcsv-parse-buffer)
+                       (me-org-table-as-alist-to-plist it))))
+      (with-current-buffer (generate-new-buffer "*Malleable*")
+        (emacs-lisp-mode)
+        (erase-buffer)
+        (me-print-to-buffer plist)))))
 
 (provide 'malleable)

@@ -1,0 +1,5 @@
+#+title: Malleable Example
+#+author: Sébastien Le Callonnec
+
+
+This is an example of a command: [[malleus:test-it?one=1&two=2]]
